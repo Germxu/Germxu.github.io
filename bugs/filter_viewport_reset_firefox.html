@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Firefox 下的filter导致viewport重置从而fixed定位失效问题</title>
+    <style>
+        *{
+            margin:0;
+            padding:0;
+        }
+        body{
+            position: relative;
+            color: #fff;
+            font-size: 2em;
+            line-height: 3;
+            height: 3000px;
+            filter: invert(1);
+            background:linear-gradient(to bottom,red,rgb(15, 187, 240),gold)
+        }
+        .fix{
+            width: 40%;
+            height:200px;
+            position: fixed;
+            bottom: 100px;
+            filter: revert(1);
+            text-align: center;
+            background-color: cadetblue;
+        }
+    </style>
+</head>
+<body>
+    <div class="fix">fix</div>
+</body>
+</html>
