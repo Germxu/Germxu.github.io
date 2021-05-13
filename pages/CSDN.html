@@ -107,9 +107,9 @@
         let dt = [], ins = [], udp = [];
         for (const i of data) {
             // console.log(i);
-            dt.push(i[0])
-            ins.push(i[1].installs)
-            udp.push(i[1].update_checks)
+            dt.unshift(i[0])
+            ins.unshift(i[1].installs)
+            udp.unshift(i[1].update_checks)
         }
         // console.log(dt, ins, udp);
 
