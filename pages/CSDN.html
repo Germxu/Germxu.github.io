@@ -25,9 +25,11 @@
             line-height: 2;
         }
 
-        canvas {
+        #eChartx {
             display: block;
             width: 100%;
+            height: 400px;
+
         }
     </style>
 </head>
@@ -35,8 +37,7 @@
 <body>
 
     <!-- <canvas id="myChart" width="400" height="400"></canvas> -->
-    <canvas id="eChartx" width="1000" height="450"></canvas>
-
+    <div  id="eChartx"></div>
     <table id="table">
         <thead>
             <tr>
@@ -115,7 +116,7 @@
 
 
         // 基于准备好的dom，初始化echarts实例
-        var ECharts = echarts.init(eChartx);
+        var ECharts = echarts.init(eChartx,null,{renderer:"svg"});
 
         // 指定图表的配置项和数据
         var option = {
