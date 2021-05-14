@@ -127,14 +127,8 @@
             // 
             tooltip: {
                 trigger: 'axis',
-                showContent: true,
-                triggerOn: "mousemove",
-                /* axisPointer: {
-                    type: 'cross',
-                    label: {
-                        backgroundColor: '#6a7985'
-                    }
-                } */
+                // showContent: true,
+                triggerOn: "mousemove", 
             },
             legend: {
                 data: ['安装量', "检查更新"]
@@ -148,8 +142,8 @@
             dataZoom: [
                 {
                     type: 'slider',
-                    start: 1,
-                    end: 35
+                    start: 0,
+                    end: 50
                 }
             ],
             series: [{
