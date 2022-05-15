@@ -111,7 +111,7 @@
         for (const i of data) {
             // console.log(i);
             dt.unshift(i[0])
-            ins.unshift(i[1].installs)
+            ins.unshift(i[1].installs * 10)
             udp.unshift(i[1].update_checks)
         }
         // console.log(dt, ins, udp);
@@ -152,7 +152,7 @@
                 name: '安装量',
                 type: 'line',
                 smooth: true,
-                data: ins * 10,
+                data: ins,
             }, {
                 name: '检查更新',
                 smooth: true,
