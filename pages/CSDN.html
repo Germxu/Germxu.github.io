@@ -5,9 +5,7 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <!-- <script src="https://cdn.bootcdn.net/ajax/libs/vue/3.0.11/vue.global.js"></script> -->
-    <!-- <script src="https://cdn.bootcdn.net/ajax/libs/Chart.js/3.1.0/chart.js"></script> -->
-    <script src="https://cdn.bootcdn.net/ajax/libs/echarts/5.1.0/echarts.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/echarts/5.1.0/echarts.min.js"></script>
     <title>CSDN-Focus Popularity</title>
     <style>
         table {
@@ -35,10 +33,14 @@
 </head>
 
 <body>
-    <!-- <canvas id="myChart" width="400" height="400"></canvas> -->
-    <div  id="eChartx"></div>
+    <div id="eChartx"></div>
 
-<a target="_blank" href="https://greasyfork.org/zh-CN/scripts/420352-csdn-focus"><h1><hr><hr></h1></a>
+    <a target="_blank" href="https://greasyfork.org/zh-CN/scripts/420352-csdn-focus">
+        <h1>
+            <hr>
+            <hr>
+        </h1>
+    </a>
 
     <table id="table">
         <thead>
@@ -53,72 +55,55 @@
 
 </html>
 <script>
-    function ajaxPost(url, callback) {
-        var xhr = new XMLHttpRequest()
-        xhr.open('get', url, true)
-        xhr.send()
-        xhr.onreadystatechange = function () {
-            if (xhr.readyState === 4) {
-                if ((xhr.status >= 200 && xhr.status < 300) || xhr.status === 304) {
-                    callback(xhr.response)
-                } else {
-                    callback()
-                }
-            }
-        }
+    const fetchData = async () => {
+        const res = await fetch('https://greasyfork.org/scripts/420352/stats.json');
+        const data = await res.json();
+        // console.log("fetchData", data);
+        return data;
     }
+    async function resolveData() {
+        const dataJson = await fetchData();
+        const dataArr = Object.entries(dataJson).reverse();
 
-    ajaxPost('https://greasyfork.org/scripts/420352/stats.json', (res) => {
-        //    console.log( res instanceof Array,JSON.parse(res));
-        const data = JSON.parse(res);
-        let dom = ``;
+        console.time("resolveData");
+        const dom = dataArr.reduce((acc, cur) => {
+            return acc + `<tr>
+                            <td>${cur[0]}</td>
+                            <td>${cur[1].installs}</td>
+                            <td>${cur[1].update_checks}</td>
+                          </tr>`;
+        }, "");
+        console.timeEnd("resolveData");
 
-        // console.log(Object.values(data));
-        // console.log(Object.keys(data));
-        // console.log(data);
-
-        let lastData = Object.entries(data).slice(-20);
-        // console.log(Object.entries(data));
-
-        renderEct(Object.entries(data));
-
-        for (const iterator in data) {
-            // console.log(data[iterator]);
-            dom = `<tr>
-                        <td>${iterator}</td>
-                        <td>${data[iterator].installs}</td>
-                        <td>${data[iterator].update_checks}</td>
-                    </tr>`+ dom
+        console.time("appendData");
+        let dom2 = ``;
+        for (const i of dataArr) {
+            dom2 = `<tr>
+                        <td>${i[0]}</td>
+                        <td>${i[1].installs}</td>
+                        <td>${i[1].update_checks}</td>
+                    </tr>` + dom2;
         }
+        console.timeEnd("appendData");
+
+        renderEct(dataArr);
         table.insertAdjacentHTML('beforeend', dom);
-    })
-
-    // const config = {
-    //     type: 'line',
-    //     data,
-    //     options: {}
-    // };
-    // var myChart = new Chart(
-    //     myChart, config
-    // );
-
-
-
-    // console.log(eChartx);
+    }
+    resolveData();
 
     function renderEct(data) {
         let dt = [], ins = [], udp = [];
         for (const i of data) {
             // console.log(i);
-            dt.unshift(i[0])
-            ins.unshift(i[1].installs * 10)
-            udp.unshift(i[1].update_checks)
+            dt.push(i[0])
+            ins.push(i[1].installs * 10)
+            udp.push(i[1].update_checks)
         }
         // console.log(dt, ins, udp);
 
 
         // 基于准备好的dom，初始化echarts实例
-        var ECharts = echarts.init(eChartx,null,{renderer:"svg"});
+        var ECharts = echarts.init(eChartx, null, { renderer: "svg" });
 
         // 指定图表的配置项和数据
         var option = {
@@ -130,7 +115,7 @@
             tooltip: {
                 trigger: 'axis',
                 // showContent: true,
-                triggerOn: "mousemove", 
+                triggerOn: "mousemove",
             },
             legend: {
                 data: ['安装量', "检查更新"]
@@ -164,8 +149,8 @@
         // 使用刚指定的配置项和数据显示图表。
         ECharts.setOption(option);
 
-        /* window.onresize = function () {
+        window.onresize = function () {
             ECharts.resize();
-        } */
+        }
     }
 </script>
